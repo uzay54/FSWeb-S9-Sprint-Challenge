@@ -1,43 +1,84 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 // önerilen başlangıç stateleri
-const initialMessage = ''
-const initialEmail = ''
-const initialSteps = 0
-const initialIndex = 4 //  "B" nin bulunduğu indexi
+
+
 
 export default function AppFunctional(props) {
-  // AŞAĞIDAKİ HELPERLAR SADECE ÖNERİDİR.
-  // Bunları silip kendi mantığınızla sıfırdan geliştirebilirsiniz.
 
-  function getXY() {
-    // Koordinatları izlemek için bir state e sahip olmak gerekli değildir.
-    // Bunları hesaplayabilmek için "B" nin hangi indexte olduğunu bilmek yeterlidir.
+
+  const [pozisyon, setPozisyon] =useState(4);
+  function solaGit() {
+
+    let konum;
+    let fark;
+    
+    konum=pozisyon;
+
+    fark=(konum === 0 || konum === 3 || konum === 6)? 0 : 1;
+
+    // if(konum == 0 || konum == 3 || konum == 6){
+    //   fark=0
+    // } else {
+    //   fark=1
+    // }
+    konum -= fark;
+
+    setPozisyon(konum);
   }
 
-  function getXYMesaj() {
-    // Kullanıcı için "Koordinatlar (2, 2)" mesajını izlemek için bir state'in olması gerekli değildir.
-    // Koordinatları almak için yukarıdaki "getXY" helperını ve ardından "getXYMesaj"ı kullanabilirsiniz.
-    // tamamen oluşturulmuş stringi döndürür.
+  function sagaGit() {
+
+    let konum;
+    let fark;
+    
+    konum=pozisyon;
+
+    fark=(konum == 2 || konum == 5 || konum == 8)? 0 : 1;
+
+    konum += fark;
+
+    setPozisyon(konum);
   }
 
-  function reset() {
-    // Tüm stateleri başlangıç ​​değerlerine sıfırlamak için bu helperı kullanın.
+  function yukariGit() {
+
+    let konum;
+    let fark;
+    
+    konum=pozisyon;
+
+    fark=(konum == 0 || konum == 1 || konum == 2)? 0 : 3;
+
+    konum -= fark;
+
+    setPozisyon(konum);
+
   }
 
-  function sonrakiIndex(yon) {
-    // Bu helper bir yön ("sol", "yukarı", vb.) alır ve "B" nin bir sonraki indeksinin ne olduğunu hesaplar.
-    // Gridin kenarına ulaşıldığında başka gidecek yer olmadığı için,
-    // şu anki indeksi değiştirmemeli.
+
+  function asagiGit() {
+
+    let konum;
+    let fark;
+    
+    konum=pozisyon;
+
+    fark=(konum == 6 || konum == 7 || konum == 8)? 0 : 3;
+
+    konum += fark;
+
+    setPozisyon(konum);
+
   }
 
-  function ilerle(evt) {
-    // Bu event handler, "B" için yeni bir dizin elde etmek üzere yukarıdaki yardımcıyı kullanabilir,
-    // ve buna göre state i değiştirir.
-  }
 
-  function onChange(evt) {
-    // inputun değerini güncellemek için bunu kullanabilirsiniz
+  function resetle() {
+
+    konum=pozisyon;
+
+    setPozisyon(konum);
+
   }
 
   function onSubmit(evt) {
@@ -53,8 +94,8 @@ export default function AppFunctional(props) {
       <div id="grid">
         {
           [0, 1, 2, 3, 4, 5, 6, 7, 8].map(idx => (
-            <div key={idx} className={`square${idx === 4 ? ' active' : ''}`}>
-              {idx === 4 ? 'B' : null}
+            <div key={idx} className={`square${idx === pozisyon ? ' active' : ''}`}>
+              {idx === pozisyon ? 'B' : null}
             </div>
           ))
         }
@@ -63,11 +104,11 @@ export default function AppFunctional(props) {
         <h3 id="message"></h3>
       </div>
       <div id="keypad">
-        <button id="left">SOL</button>
-        <button id="up">YUKARI</button>
-        <button id="right">SAĞ</button>
-        <button id="down">AŞAĞI</button>
-        <button id="reset">reset</button>
+        <button id="left" onClick={solaGit}>SOL</button>
+        <button id="up" onClick={yukariGit}>YUKARI</button>
+        <button id="right" onClick={sagaGit}>SAĞ</button>
+        <button id="down" onClick={asagiGit}>AŞAĞI</button>
+        <button id="reset" onclick={resetle}>RESET</button>
       </div>
       <form>
         <input id="email" type="email" placeholder="email girin"></input>
