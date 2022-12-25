@@ -34,7 +34,7 @@ export default function AppFunctional(props) {
     
     konum=pozisyon;
 
-    fark=(konum == 2 || konum == 5 || konum == 8)? 0 : 1;
+    fark=(konum === 2 || konum === 5 || konum === 8)? 0 : 1;
 
     konum += fark;
 
@@ -48,7 +48,7 @@ export default function AppFunctional(props) {
     
     konum=pozisyon;
 
-    fark=(konum == 0 || konum == 1 || konum == 2)? 0 : 3;
+    fark=(konum === 0 || konum === 1 || konum === 2)? 0 : 3;
 
     konum -= fark;
 
@@ -64,7 +64,7 @@ export default function AppFunctional(props) {
     
     konum=pozisyon;
 
-    fark=(konum == 6 || konum == 7 || konum == 8)? 0 : 3;
+    fark=(konum === 6 || konum === 7 || konum === 8)? 0 : 3;
 
     konum += fark;
 
@@ -72,12 +72,15 @@ export default function AppFunctional(props) {
 
   }
 
+console.log(pozisyon);
 
   function resetle() {
 
-    konum=pozisyon;
+    console.log("reset");
 
-    setPozisyon(konum);
+  
+
+    setPozisyon(4);
 
   }
 
@@ -108,7 +111,7 @@ export default function AppFunctional(props) {
         <button id="up" onClick={yukariGit}>YUKARI</button>
         <button id="right" onClick={sagaGit}>SAĞ</button>
         <button id="down" onClick={asagiGit}>AŞAĞI</button>
-        <button id="reset" onclick={resetle}>RESET</button>
+        <button id="reset" onClick={resetle}>RESET</button>
       </div>
       <form>
         <input id="email" type="email" placeholder="email girin"></input>
