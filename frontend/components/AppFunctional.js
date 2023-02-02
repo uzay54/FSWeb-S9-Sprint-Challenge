@@ -1,122 +1,138 @@
-import React, { useState } from 'react'
-
-// önerilen başlangıç stateleri
-
+import axios from "axios";
+import React, { useState } from "react";
 
 
 export default function AppFunctional(props) {
+  const [konum, setKonum] = useState([3, 3]);
+  const [hamleSayisi, setHamleSayisi] = useState(0);
+  const [mesaj, setMesaj] = useState("");
+  const [email, setEmail] = useState("");
 
-
-  const [pozisyon, setPozisyon] =useState(4);
-  function solaGit() {
-
-    let konum;
-    let fark;
-    
-    konum=pozisyon;
-
-    fark=(konum === 0 || konum === 3 || konum === 6)? 0 : 1;
-
-    // if(konum == 0 || konum == 3 || konum == 6){
-    //   fark=0
-    // } else {
-    //   fark=1
-    // }
-    konum -= fark;
-
-    setPozisyon(konum);
-  }
+  const konumAsIndex = (konum[1] - 1) * 5 + konum[0] - 1;
 
   function sagaGit() {
+    if (konum[0] < 5) {
+      setKonum([konum[0] + 1, konum[1]]);
+      setHamleSayisi(hamleSayisi + 1);
+    } else {
+      setMesaj("Sağa gidemezsiniz.");
+    }
+  }
 
-    let konum;
-    let fark;
-    
-    konum=pozisyon;
+  function solaGit() {
+    if (konum[0] > 1) {
+      setKonum([konum[0] - 1, konum[1]]);
+      setHamleSayisi(hamleSayisi + 1);
+    } else {
+      setMesaj("Sola gidemezsiniz.");
+    }
+  }
 
-    fark=(konum === 2 || konum === 5 || konum === 8)? 0 : 1;
-
-    konum += fark;
-
-    setPozisyon(konum);
+  function asagiGit() {
+    if (konum[1] < 5) {
+      setKonum([konum[0], konum[1] + 1]);
+      //console.log(konum, konumAsIndex);
+      setHamleSayisi(hamleSayisi + 1);
+    } else {
+      setMesaj("Aşağı gidemezsiniz.");
+    }
   }
 
   function yukariGit() {
+    if (konum[1] > 1) {
+      setKonum([konum[0], konum[1] - 1]);
+      setHamleSayisi(hamleSayisi + 1);
+    } else {
+      setMesaj("Yukarı gidemezsiniz.");
+    }
+  }
 
-    let konum;
-    let fark;
-    
-    konum=pozisyon;
+  function reset() {
+    setKonum([3, 3]);
+    setHamleSayisi(0);
+    setMesaj("");
+    setEmail("");
+  }
 
-    fark=(konum === 0 || konum === 1 || konum === 2)? 0 : 3;
+  function onChange(evt) {
+    setEmail(evt.target.value);
+  }
 
-    konum -= fark;
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-    setPozisyon(konum);
+    const payload = {
+      x: konum[0],
+      y: konum[1],
+      steps: hamleSayisi,
+      email: email,
+    };
+    console.log(payload);
+    axios
+      .post("http://localhost:9000/api/result", payload)
+      .then((res) => {
+        console.log(res.data);
+        reset();
+      })
+      .catch((error) => {
+        console.log("Hatalı payload", error);
+      });
+  };
 
+
+  const yirmibes= []
+  for( let i=0; i<=24 ; i++){
+    yirmibes.push(i)
   }
 
 
-  function asagiGit() {
-
-    let konum;
-    let fark;
-    
-    konum=pozisyon;
-
-    fark=(konum === 6 || konum === 7 || konum === 8)? 0 : 3;
-
-    konum += fark;
-
-    setPozisyon(konum);
-
-  }
-
-console.log(pozisyon);
-
-  function resetle() {
-
-    console.log("reset");
-
-  
-
-    setPozisyon(4);
-
-  }
-
-  function onSubmit(evt) {
-    // payloadu POST etmek için bir submit handlera da ihtiyacınız var.
-  }
 
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
-        <h3 id="coordinates">Koordinatlar (2, 2)</h3>
-        <h3 id="steps">0 kere ilerlediniz</h3>
+        <h3 id="coordinates">Koordinatlar ({konum.join(", ")})</h3>
+        <h3 id="steps">{hamleSayisi} kere ilerlediniz</h3>
       </div>
       <div id="grid">
-        {
-          [0, 1, 2, 3, 4, 5, 6, 7, 8].map(idx => (
-            <div key={idx} className={`square${idx === pozisyon ? ' active' : ''}`}>
-              {idx === pozisyon ? 'B' : null}
-            </div>
-          ))
-        }
+   {yirmibes.map((idx) => (
+          <div
+            key={idx}
+            className={`square${idx === konumAsIndex ? " active" : ""}`}
+          >
+            {idx === konumAsIndex ? "B" : null}
+          </div>
+        ))}
       </div>
       <div className="info">
-        <h3 id="message"></h3>
+        <h3 id="message">{mesaj}</h3>
       </div>
       <div id="keypad">
-        <button id="left" onClick={solaGit}>SOL</button>
-        <button id="up" onClick={yukariGit}>YUKARI</button>
-        <button id="right" onClick={sagaGit}>SAĞ</button>
-        <button id="down" onClick={asagiGit}>AŞAĞI</button>
-        <button id="reset" onClick={resetle}>RESET</button>
+        <button id="left" onClick={solaGit} data-testid="left-butt">
+          SOL
+        </button>
+        <button id="up" onClick={yukariGit} data-testid="up-butt">
+          YUKARI
+        </button>
+        <button id="right" onClick={sagaGit} data-testid="right-butt">
+          SAĞ
+        </button>
+        <button id="down" onClick={asagiGit} data-testid="down-butt">
+          AŞAĞI
+        </button>
+        <button id="reset" onClick={reset}>
+          reset
+        </button>
       </div>
-      <form>
-        <input id="email" type="email" placeholder="email girin"></input>
-        <input id="submit" type="submit"></input>
+      <form onSubmit={handleSubmit}>
+        <input
+          id="email"
+          type="email"
+          placeholder="email girin"
+          onChange={onChange}
+          data-testid="email"
+        ></input>
+        <input id="submit" type="submit" data-testid="submit-button"></input>
       </form>
     </div>
-  )
+  );
 }
